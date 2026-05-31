@@ -1,4 +1,12 @@
 package domain
 
-// StructuredUpdate — результат LLM-экстракции из DailyUpdate
-type StructuredUpdate struct{}
+import "time"
+
+type StructuredUpdate struct {
+	ID            int
+	DailyUpdateID int
+	Progress      []string
+	Plans         []string
+	Blockers      []string
+	CreatedAt     time.Time
+}

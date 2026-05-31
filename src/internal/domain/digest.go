@@ -1,4 +1,11 @@
 package domain
 
-// Digest — готовый утренний дайджест команды в формате 3-2-1
-type Digest struct{}
+import "time"
+
+type Digest struct {
+	ID         int
+	TeamID     int
+	Date       time.Time
+	LeadDigest string
+	CreatedAt  time.Time
+}
