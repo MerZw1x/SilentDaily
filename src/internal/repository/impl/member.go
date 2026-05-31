@@ -44,7 +44,7 @@ func (memberRepo *MemberRepository) GetByTeamID(conn abstract.IDBConnection, tea
 	db := conn.Get()
 
 	var memberDAOs []model.Member
-	err := db.Find(&memberDAOs).Error
+	err := db.Where("team_id = ?", teamID).Find(&memberDAOs).Error
 
 	if err != nil {
 		return nil, err

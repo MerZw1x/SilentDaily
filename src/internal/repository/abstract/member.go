@@ -7,6 +7,6 @@ import (
 
 type IMemberRepository interface {
 	Create(conn abstract.IDBConnection, member *domain.Member) error
-	GetByTelegramID(conn abstract.IDBConnection, telegramUserID int64) (*domain.Member, error)
+	GetByTelegramID(conn abstract.IDBConnection, telegramUserID int) (*domain.Member, error)
 	GetByTeamID(conn abstract.IDBConnection, teamID int) ([]*domain.Member, error)
 }
