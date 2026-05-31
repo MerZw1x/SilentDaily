@@ -1,4 +1,10 @@
-package db
+package abstract
 
-// IDBConnection — абстракция соединения с базой данных
-type IDBConnection interface{}
+import "gorm.io/gorm"
+
+type IDBConnection interface {
+	Get() *gorm.DB
+	BeginTx() IDBConnection
+	Commit() error
+	Rollback()
+}
