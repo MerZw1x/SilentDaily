@@ -8,19 +8,21 @@ import (
 )
 
 type UpdateService struct {
+	Conn                  aconn.IDBConnection
 	MemberRepository      abstract.IMemberRepository
 	DailyUpdateRepository abstract.IDailyUpdateRepository
 }
 
-func NewUpdateService(memberRepository abstract.IMemberRepository, dailyUpdateRepository abstract.IDailyUpdateRepository) *UpdateService {
+func NewUpdateService(conn aconn.IDBConnection, memberRepository abstract.IMemberRepository, dailyUpdateRepository abstract.IDailyUpdateRepository) *UpdateService {
 	return &UpdateService{
+		Conn:                  conn,
 		MemberRepository:      memberRepository,
 		DailyUpdateRepository: dailyUpdateRepository,
 	}
 }
 
-func (service *UpdateService) Submit(conn aconn.IDBConnection, telegramUserID int, rawText string) error {
-	member, err := service.MemberRepository.GetByTelegramID(conn, telegramUserID)
+func (service *UpdateService) Submit(telegramUserID int, rawText string) error {
+	member, err := service.MemberRepository.GetByTelegramID(service.Conn, telegramUserID)
 	if err != nil {
 		return err
 	}
@@ -29,7 +31,7 @@ func (service *UpdateService) Submit(conn aconn.IDBConnection, telegramUserID in
 	}
 
 	update := createDailyUpdate(member.ID, member.TeamID, rawText)
-	err = service.DailyUpdateRepository.Create(conn, update)
+	err = service.DailyUpdateRepository.Create(service.Conn, update)
 	if err != nil {
 		return err
 	}

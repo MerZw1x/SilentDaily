@@ -9,17 +9,19 @@ import (
 )
 
 type MemberService struct {
+	Conn             aconn.IDBConnection
 	MemberRepository abstract.IMemberRepository
 }
 
-func NewMemberRepository(memberRepository abstract.IMemberRepository) *MemberService {
+func NewMemberRepository(conn aconn.IDBConnection, memberRepository abstract.IMemberRepository) *MemberService {
 	return &MemberService{
+		Conn:             conn,
 		MemberRepository: memberRepository,
 	}
 }
 
-func (service *MemberService) Register(conn aconn.IDBConnection, telegramUserID int, name string, teamID int, isLead bool) error {
-	member, err := service.MemberRepository.GetByTelegramID(conn, telegramUserID)
+func (service *MemberService) Register(telegramUserID int, name string, teamID int, isLead bool) error {
+	member, err := service.MemberRepository.GetByTelegramID(service.Conn, telegramUserID)
 	if err != nil {
 		return err
 	}
@@ -35,7 +37,7 @@ func (service *MemberService) Register(conn aconn.IDBConnection, telegramUserID 
 		CreatedAt:      time.Now(),
 	}
 
-	err = service.MemberRepository.Create(conn, member)
+	err = service.MemberRepository.Create(service.Conn, member)
 	if err != nil {
 		return err
 	}

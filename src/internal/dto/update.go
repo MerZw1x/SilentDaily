@@ -1,7 +1,10 @@
 package dto
 
-// SubmitUpdateRequest — тело POST /api/v1/updates
-type SubmitUpdateRequest struct{}
+type SubmitUpdateRequest struct {
+	TelegramUserID int
+	RawText        string
+}
 
-// SubmitUpdateResponse — ответ на POST /api/v1/updates
-type SubmitUpdateResponse struct{}
+type SubmitUpdateResponse struct {
+	Status string
+}
