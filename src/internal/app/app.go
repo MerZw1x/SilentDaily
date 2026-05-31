@@ -3,9 +3,6 @@ package app
 import (
 	"log"
 	"silent/src/internal/config"
-
-	"silent/src/internal/config"
-	"silent/src/internal/db/postgres"
 	"silent/src/internal/handler/health"
 	"silent/src/internal/validator"
 
@@ -14,7 +11,7 @@ import (
 
 func Run() {
 	config := config.Load()
-	conn := postgres.NewPostgresConnection(config.GetDBDSN())
+	//conn := postgres.NewPostgresConnection(config.GetDBDSN())
 
 	app := fiber.New(fiber.Config{
 		EnableSplittingOnParsers: true,
