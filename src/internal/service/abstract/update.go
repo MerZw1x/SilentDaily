@@ -1,4 +1,9 @@
 package abstract
 
-// IUpdateService — контракт сервиса приёма апдейтов от разработчиков
-type IUpdateService interface{}
+import (
+	"silent/src/internal/db/abstract"
+)
+
+type IUpdateService interface {
+	Submit(conn abstract.IDBConnection, telegramUserID int, rawText string) error
+}
