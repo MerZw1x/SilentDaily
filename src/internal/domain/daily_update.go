@@ -1,4 +1,13 @@
 package domain
 
-// DailyUpdate — сырое сообщение от разработчика за день
-type DailyUpdate struct{}
+import "time"
+
+type DailyUpdate struct {
+	ID        int
+	MemberID  int
+	TeamID    int
+	RawText   string
+	Status    string
+	Attempts  int
+	CreatedAt time.Time
+}

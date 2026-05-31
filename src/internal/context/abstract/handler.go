@@ -1,4 +1,7 @@
 package abstract
 
-// IHandler — абстракция HTTP-обработчика, совместимая с Fiber
-type IHandler interface{}
+type HandlerContext interface {
+	Get(key string, defaultValue ...string) string
+	Status(status int) HandlerContext
+	BindJSON(data any) error
+}
