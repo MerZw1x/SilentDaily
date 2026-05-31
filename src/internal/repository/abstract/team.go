@@ -1,4 +1,11 @@
 package abstract
 
-// ITeamRepository — контракт для работы с teams
-type ITeamRepository interface{}
+import (
+	"silent/src/internal/db/abstract"
+	"silent/src/internal/domain"
+)
+
+type ITeamRepository interface {
+	Create(conn abstract.IDBConnection, team *domain.Team) error
+	GetByID(conn abstract.IDBConnection, id int64) (*domain.Team, error)
+}
