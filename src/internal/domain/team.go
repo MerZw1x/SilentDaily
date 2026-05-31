@@ -1,4 +1,9 @@
 package domain
 
-// Team представляет команду разработчиков
-type Team struct{}
+import "time"
+
+type Team struct {
+	ID        int
+	Name      string
+	CreatedAt time.Time
+}
