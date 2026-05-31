@@ -2,7 +2,6 @@ package config
 
 import (
 	"os"
-	"strconv"
 )
 
 type Config struct {
@@ -13,12 +12,11 @@ type Config struct {
 }
 
 type DBConfig struct {
-	Host, User, Password, Name string
-	Port                       int
+	Host, User, Port, Password, Name string
 }
 
 type ServerConfig struct {
-	Port int
+	Port string
 }
 
 type TelegramConfig struct {
@@ -37,11 +35,11 @@ func Load() *Config {
 		Password: "",
 		Name:     "postgres",
 		Host:     "localhost",
-		Port:     5432,
+		Port:     "5432",
 	}
 
 	serverCfg := ServerConfig{
-		Port: 80,
+		Port: "80",
 	}
 
 	tgCfg := TelegramConfig{}
@@ -75,15 +73,11 @@ func Load() *Config {
 	}
 
 	if value := os.Getenv("DATABASE_PORT"); value != "" {
-		if port, err := strconv.Atoi(value); err == nil {
-			cfg.DB.Port = port
-		}
+		cfg.DB.Port = value
 	}
 
 	if value := os.Getenv("SERVER_PORT"); value != "" {
-		if port, err := strconv.Atoi(value); err == nil {
-			cfg.Server.Port = port
-		}
+		cfg.Server.Port = value
 	}
 
 	if value := os.Getenv("OPENROUTER_BASE_URL"); value != "" {
@@ -98,14 +92,18 @@ func Load() *Config {
 		cfg.AI.Model = value
 	}
 
+	if value := os.Getenv("TELEGRAM_TOKEN"); value != "" {
+		cfg.Telegram.Token = value
+	}
+
 	return cfg
 }
 
 func (cfg *Config) GetDBDSN() string {
 	return "host=" + cfg.DB.Host +
-		" port=" + strconv.Itoa(cfg.DB.Port) +
+		" port=" + cfg.DB.Port +
 		" user=" + cfg.DB.User +
 		" password=" + cfg.DB.Password +
-		" dbname=" + cfg.DB.NAME +
+		" dbname=" + cfg.DB.Name +
 		" sslmode=disable"
 }

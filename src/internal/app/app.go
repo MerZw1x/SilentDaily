@@ -2,19 +2,12 @@ package app
 
 import (
 	"log"
+	"silent/src/internal/config"
 
-	"backend/src/internal/config"
-	"backend/src/internal/db/postgres"
-	"backend/src/internal/handler/api"
-	"backend/src/internal/handler/health"
-	"backend/src/internal/handler/public"
-	"backend/src/internal/middleware"
-	"backend/src/internal/provider"
-	rimpl "backend/src/internal/repository/impl"
-	simpl "backend/src/internal/service/impl"
-	"backend/src/internal/validator"
-
-	sabst "backend/src/internal/service/abstract"
+	"silent/src/internal/config"
+	"silent/src/internal/db/postgres"
+	"silent/src/internal/handler/health"
+	"silent/src/internal/validator"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -22,14 +15,6 @@ import (
 func Run() {
 	config := config.Load()
 	conn := postgres.NewPostgresConnection(config.GetDBDSN())
-	serviceProvider := provider.NewServiceProvider()
-
-	rosstatRepo := rimpl.NewRosstatRepository()
-	rosstatAgeRepo := rimpl.NewRosstatAgeRepository()
-	serviceProvider.Register((*sabst.IRosstatService)(nil), simpl.NewRosstatService(conn, rosstatRepo, rosstatAgeRepo))
-
-	geoRepo := rimpl.NewGeoRepository()
-	serviceProvider.Register((*sabst.IGeoService)(nil), simpl.NewGeoService(conn, geoRepo))
 
 	app := fiber.New(fiber.Config{
 		EnableSplittingOnParsers: true,
@@ -51,15 +36,5 @@ func Run() {
 
 	app.Get("/ping", health.PingHandler)
 
-	app.Get("/api/v1/rosstat", middleware.Adapt(public.GetRosstatHandler, serviceProvider))
-	app.Get("/api/v1/geo", middleware.Adapt(public.GetGeoHandler, serviceProvider))
-
-	app.Get("/openapi.yaml", api.OpenapiYamlHandler)
-	app.Get("/api/*", api.ApiHandler())
-
-	app.Get("/api/v1/ai/report/:code", middleware.Adapt(public.GetReportAsyncHandler, serviceProvider))
-	app.Get("/api/v1/ai/report/:code/request/:hash", middleware.Adapt(public.GetRequestStatusHandler, serviceProvider))
-	app.Post("/api/v1/ai/report", middleware.Adapt(public.PostReportAsyncHandler, serviceProvider))
-
-	log.Fatal(app.Listen(":80"))
+	log.Fatal(app.Listen(":" + config.Server.Port))
 }
