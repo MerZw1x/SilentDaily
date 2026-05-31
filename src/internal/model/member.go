@@ -29,3 +29,7 @@ func (m *Member) ToModel(member *domain.Member) (*Member, error) {
 	}
 	return modelMember, nil
 }
+
+func (m *Member) ToDomainSlice(members []Member) ([]*domain.Member, error) {
+	return ToDomainSlice[Member, domain.Member](members)
+}
