@@ -143,7 +143,7 @@ func Adapt(handlerFunc interface{}, serviceProvider *provider.ServiceProvider) f
 		errVal := results[1].Interface()
 
 		if errVal != nil {
-			return wrapError(err, fiberCtx)
+			return wrapError(errVal, fiberCtx)
 		}
 
 		if data == nil {

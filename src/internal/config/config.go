@@ -2,6 +2,8 @@ package config
 
 import (
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -30,24 +32,12 @@ type AIConfig struct {
 }
 
 func Load() *Config {
-	dbCfg := DBConfig{
-		User:     "postgres",
-		Password: "",
-		Name:     "postgres",
-		Host:     "localhost",
-		Port:     "5432",
-	}
+	godotenv.Load()
 
-	serverCfg := ServerConfig{
-		Port: "80",
-	}
-
+	dbCfg := DBConfig{}
+	serverCfg := ServerConfig{}
 	tgCfg := TelegramConfig{}
-
-	aiCfg := AIConfig{
-		OpenRouterURL: "https://openrouter.ai/api/v1",
-		Model:         "openrouter/free",
-	}
+	aiCfg := AIConfig{}
 
 	cfg := &Config{
 		DB:       dbCfg,

@@ -45,8 +45,8 @@ func (service *MemberService) Register(telegramUserID int, name string, teamID i
 	return nil
 }
 
-func (service *MemberService) GetByTelegramID(conn aconn.IDBConnection, telegramUserID int) (*domain.Member, error) {
-	member, err := service.MemberRepository.GetByTelegramID(conn, telegramUserID)
+func (service *MemberService) GetByTelegramID(telegramUserID int) (*domain.Member, error) {
+	member, err := service.MemberRepository.GetByTelegramID(service.Conn, telegramUserID)
 	if err != nil {
 		return nil, err
 	}

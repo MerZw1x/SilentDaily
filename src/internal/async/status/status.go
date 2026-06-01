@@ -1,6 +1,5 @@
 package status
 
-// Статусы обработки асинхронных задач
 const (
 	StatusQueued     = "queued"
 	StatusInProgress = "in_progress"
@@ -8,5 +7,7 @@ const (
 	StatusFailed     = "failed"
 )
 
-// CompletionStatus — результат выполнения воркера
-type CompletionStatus struct{}
+type CompletionStatus struct {
+	UpdateID int
+	Err      error
+}

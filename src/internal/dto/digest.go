@@ -1,4 +1,9 @@
 package dto
 
-// DigestResponse — ответ на GET /api/v1/digest/:teamId
-type DigestResponse struct{}
+import "time"
+
+type DigestResponse struct {
+	TeamID     int       `json:"team_id"`
+	Date       time.Time `json:"date"`
+	LeadDigest string    `json:"lead_digest"`
+}
