@@ -1,4 +1,5 @@
 package abstract
 
-// IUpdateService — контракт сервиса приёма апдейтов от разработчиков
-type IUpdateService interface{}
+type IUpdateService interface {
+	Submit(telegramUserID int, rawText string) error
+}

@@ -7,7 +7,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o app ./src/cmd
+RUN go build -o app ./src/cmd/backend
 
 EXPOSE 80
 

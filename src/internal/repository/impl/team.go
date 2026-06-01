@@ -23,7 +23,12 @@ func (teamRepo *TeamRepository) Create(conn abstract.IDBConnection, team *domain
 		return err
 	}
 
-	return db.Save(teamDAO).Error
+	if err := db.Create(teamDAO).Error; err != nil {
+		return err
+	}
+
+	team.ID = teamDAO.ID
+	return nil
 }
 
 func (teamRepo *TeamRepository) GetByID(conn abstract.IDBConnection, id int) (*domain.Team, error) {
