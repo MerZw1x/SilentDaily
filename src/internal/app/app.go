@@ -30,7 +30,6 @@ func Run() {
 	cfg := config.Load()
 	conn := postgres.NewPostgresConnection(cfg.GetDBDSN())
 
-	// --- repositories ---
 	memberRepo := rimpl.NewMemberRepository()
 	teamRepo := rimpl.NewTeamRepository()
 	updateRepo := rimpl.NewDailyUpdateRepository()
@@ -38,14 +37,12 @@ func Run() {
 	digestRepo := rimpl.NewDigestRepository()
 	aiApiRepo := rimpl.NewAiApiRepository()
 
-	// --- services ---
 	sp := provider.NewServiceProvider()
 	sp.Register((*abstract.IUpdateService)(nil), simpl.NewUpdateService(conn, memberRepo, updateRepo))
 	sp.Register((*abstract.IMemberService)(nil), simpl.NewMemberRepository(conn, memberRepo))
 	sp.Register((*abstract.ITeamService)(nil), simpl.NewTeamService(conn, teamRepo))
 	sp.Register((*abstract.IDigestService)(nil), simpl.NewDigestService(digestRepo))
 
-	// --- telegram bot ---
 	var bot *tgbotapi.BotAPI
 	if cfg.Telegram.Token != "" {
 		var err error
@@ -59,7 +56,6 @@ func Run() {
 		log.Println("[app] TELEGRAM_TOKEN not set — bot disabled")
 	}
 
-	// --- async dispatcher ---
 	apiKeys := strings.Split(cfg.AI.OpenRouterKey, ",")
 	workerCfg := workerconfig.WorkerConfig{
 		Conn:                       conn,
@@ -85,14 +81,12 @@ func Run() {
 	go d.RunWorkers(ctx)
 	go d.ProcessCompletion(ctx)
 
-	// --- digest scheduler ---
 	if bot != nil {
 		sched := scheduler.NewDigestScheduler(workerCfg, []int{}, map[int]int64{})
 		sched.Start()
 		defer sched.Stop()
 	}
 
-	// --- bot polling ---
 	if bot != nil {
 		updateSvc, _ := sp.Get(reflect.TypeOf((*abstract.IUpdateService)(nil)).Elem())
 		memberSvc, _ := sp.Get(reflect.TypeOf((*abstract.IMemberService)(nil)).Elem())
@@ -100,7 +94,6 @@ func Run() {
 		go botRouter.Start()
 	}
 
-	// --- HTTP server ---
 	app := fiber.New(fiber.Config{
 		EnableSplittingOnParsers: true,
 		StructValidator:          validator.NewFiberStructValidator(),
